@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- Controller 자동 스캔 -->
+	<context:component-scan base-package="com.dalbodre.web.main.controller"></context:component-scan>
+	<context:component-scan base-package="com.dalbodre.web.member.controller"></context:component-scan>
+	
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+	
+	<!-- 파일 다운로드 설정 -->
+	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"></beans:bean>
+	
+	<!-- Tiles 설정 -->
+	<beans:bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<!-- Property 설정 방식
+			 name : 의존 객체를 주입할 때 사용할 setter 메소드의 프로퍼티 이름
+		 -->
+		 <beans:property name="definitions">
+		 	<!-- List Type Property 설정방식
+		 		 Tiles 설정 파일(top-left-right-bottom-center의 화면 구성 제어 역할)
+		 	 -->
+		 	 <beans:list>
+		 	 	<beans:value>/WEB-INF/tiles-def/main.xml</beans:value>
+		 	 </beans:list>
+		 </beans:property>
+	</beans:bean>
+	
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<!-- View Resolver
+		 1. View Resolver는 Spring의 DispatcherServlet이 Controller의 응답 결과를 가져올 때, 어떤 방식으로 view 객체를 가져올지 정하고 해당 객체를 생성한다.
+		 2. View Resolver를 구현한 클래스는 InternalResourceViewResolver, BeanNameViewResolver, XmlViewResolver, UrlBasedViewResolver 등이 있다.
+		 3. DispatcherServlet은 여러 개의 View Resolver를 가질 수 있는데, 'order' property에 따라 어떤 ViewResolver를 사용할지 우선순위를 정할 수 있다.
+		        우선 순위를 명시하지 않으면 가장 낮은 우선순위를 가진다.
+		 4. 우선 순위가 높은 View Resolver에게 View 객체를 요청하는데, 만약 null을 리턴한다면 그 다음 우선순위의 View Resolver에게 객체를 요청하게 된다.
+		 5. InternalResourceViewResolver는 항상 mapping되는 view 객체를 리턴하고, 없다고 null을 반환하지 않으므로 항상 가장 낮은 우선순위로 두어야 한다.
+	 -->
+	 <!-- Tiles View Resolver -->
+	<beans:bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<!-- 컨트롤러의 리턴값과 Tiles 설정 파일의 식별자가 일치하면 tiles-definition 설정을 실행 -->
+		<beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+		<beans:property name="order" value="1"/>
+	</beans:bean>
+	
+	<!-- 팝업창 또는 Ajax 통신 등 Tiles를 이용하지 않고 Jsp를 호출해야 하는 경우 -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/"/>
+		<beans:property name="suffix" value=".jsp"/>
+		<beans:property name="order" value="2"/>
+	</beans:bean>
+	
+	<!-- 파일 업로드 설정 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="52428800"/><!-- 50MB -->
+		<beans:property name="defaultEncoding" value="UTF-8"/>
+	</beans:bean>
+	
+	<!-- 데이터 작업 없이  View 호출 : Main Page -->
+	<!-- 요청 : View-Name 속성을 통해 Tiles 설정을 호출 -->
+	<view-controller path="/main/main.do" view-name="main"/> 
+	
+</beans:beans>
