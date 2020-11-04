@@ -1625,3 +1625,23 @@ section {
 #footer .credits {
   font-size: 13px;
 }
+
+/*
+	css Ãß°¡
+*/
+#topBar .language_tab{
+	position: relative;
+    float: left;
+    display: block;
+    width: 158px;
+    border: solid 1px #d9d9d9;
+}
+
+#topBar .language_tab_a {
+    display: block;
+    height: 28px;
+    line-height: 28px;
+    
+    padding-left: 20px;
+    color: #848484;
+}
